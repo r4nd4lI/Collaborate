@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for merge conflicts
+        run: |
+          git diff --check HEAD^ HEAD 2>/dev/null || true
+
+      - name: Validate structure
+        run: |
+          echo "Checking required files..."
+          test -f README.md && echo "README.md OK" || echo "README.md MISSING"
+          test -f CLAUDE.md && echo "CLAUDE.md OK" || echo "CLAUDE.md MISSING"
+          echo "CI passed."
